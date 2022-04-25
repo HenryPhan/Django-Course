@@ -1,9 +1,43 @@
 from django.db import models
+from django.contrib.auth.models import User
 
-# Create your models here.
+
+class CreatedAbstractModel(models.Model):
+    created_by = models.ForeignKey(
+        User,
+        blank=True, null=True, on_delete=models.SET_NULL,
+        related_name='%(app_label)s_%(class)s_created_by'
+    )
+    created_at = models.DateTimeField(
+        blank=True, null=True, auto_now_add=True,
+        db_index=True
+    )
+
+    class Meta:
+        abstract = True
 
 
-class Employee(models.Model):
+class ModifiedAbstractModel(models.Model):
+    modified_by = models.ForeignKey(
+        User,
+        blank=True, null=True, on_delete=models.SET_NULL,
+        related_name='%(app_label)s_%(class)s_modified_by'
+    )
+    modified_at = models.DateTimeField(
+        blank=True, null=True, auto_now=True,
+        db_index=True
+    )
+
+    class Meta:
+        abstract = True
+
+
+class TrackingAbstractModel(CreatedAbstractModel, ModifiedAbstractModel):
+    class Meta:
+        abstract = True
+
+
+class Employee(TrackingAbstractModel):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     address = models.CharField(max_length=500)
@@ -13,7 +47,7 @@ class Employee(models.Model):
         return f'{self.id} - {self.name}'
 
 
-class Customer(models.Model):
+class Customer(TrackingAbstractModel):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=150)
     contact_name = models.CharField(max_length=100)
@@ -28,7 +62,7 @@ class Customer(models.Model):
         self.save()
 
 
-class Product(models.Model):
+class Product(TrackingAbstractModel):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     price = models.FloatField()
@@ -38,7 +72,7 @@ class Product(models.Model):
         return f'{self.id} - {self.name}'
 
 
-class Order(models.Model):
+class Order(TrackingAbstractModel):
     id = models.AutoField(primary_key=True)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
@@ -49,7 +83,7 @@ class Order(models.Model):
         return f'{self.id} - {self.customer} - {self.employee}'
 
 
-class OrderDetail(models.Model):
+class OrderDetail(TrackingAbstractModel):
     id = models.AutoField(primary_key=True)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
