@@ -1,0 +1,29 @@
+<style>
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+</style>
+
+{% if orders %}
+    <table style="width:100%">
+        <tr>
+            <th>Id</th>
+            <th>Customer</th>
+            <th>Purchase Date</th>
+            <th>Delivery Date</th>
+            <th>Employee</th>
+        </tr>
+        {% for order in orders %}
+        <tr>
+            <td><a href="{% url 'sale_management:order_detail' order.id %}">{{ order.id }}</a></td>
+            <td>{{ order.customer }}</td>
+            <td>{{ order.purchase_date }}</td>
+            <td>{{ order.delivery_date }}</td>
+            <td>{{ order.employee }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <h1>No order are available</h1>
+{% endif %}

@@ -87,7 +87,12 @@ class OrderDetail(TrackingAbstractModel):
     id = models.AutoField(primary_key=True)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    price = models.FloatField()
     quantity = models.IntegerField()
 
     def __str__(self):
         return f'{self.id} - {self.order} - {self.product}'
+
+    @property
+    def subtotal(self):
+        return self.quantity * self.price

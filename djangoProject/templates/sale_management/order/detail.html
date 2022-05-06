@@ -1,0 +1,30 @@
+<style>
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+</style>
+
+{% if order %}
+    <h2>{{ order }}</h2>
+    <table style="width:100%">
+        <tr>
+            <th>Id</th>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>SubTotal</th>
+        </tr>
+        {% for item in details %}
+        <tr>
+            <td>{{ item.id }}</td>
+            <td>{{ item.product }}</td>
+            <td>{{ item.product.price }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.subtotal }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <h1>No order are avaiable</h1>
+{% endif %}
