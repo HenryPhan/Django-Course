@@ -1,16 +1,20 @@
 
 from django.shortcuts import render, get_object_or_404
-from sale_management.models import Order
+from sale_management.models import Order, OrderDetail
 from django.views import generic
 
 
-def detail(request, order_id):
-    order = get_object_or_404(Order, pk=order_id)
-    context = {
-        'order': order,
-        'details': order.orderdetail_set.all()
-    }
-    return render(request, 'sale_management/order/detail.html', context)
+# def detail(request, order_id):
+#     order = get_object_or_404(Order, pk=order_id)
+#     context = {
+#         'order': order,
+#         'details': order.orderdetail_set.all()
+#     }
+#     return render(request, 'sale_management/order/detail.html', context)
+
+class DetailView(generic.DetailView):
+    model = Order
+    template_name = 'sale_management/order/detail.html'
 
 
 # def listing(request):

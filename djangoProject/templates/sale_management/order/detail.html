@@ -15,7 +15,7 @@ table, th, td {
             <th>Quantity</th>
             <th>SubTotal</th>
         </tr>
-        {% for item in details %}
+        {% for item in order.orderdetail_set.all %}
         <tr>
             <td>{{ item.id }}</td>
             <td>{{ item.product }}</td>
